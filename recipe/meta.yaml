@@ -1,27 +1,25 @@
 {%set name = "Routes" %}
 {% set version = "2.5.1" %}
-{%set compress_type = "tar.gz" %}
-{%set hash_type = "sha256" %}
-{% set hash_val = "b6346459a15f0cbab01a45a90c3d25caf980d4733d628b4cc1952b865125d053" %}
-{%set build_num = "0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.{{ compress_type }}
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ compress_type }}
-  {{ hash_type }}: {{ hash_val }}
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: "b6346459a15f0cbab01a45a90c3d25caf980d4733d628b4cc1952b865125d053"
 
 build:
-  number: {{ build_num }}
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation
 
 requirements:
   host:
     - python
     - setuptools
+    - wheel
+    - pip
 
   run:
     - python
@@ -31,6 +29,10 @@ requirements:
 test:
   imports:
     - routes
+  requires:
+    - pip
+  commands:
+    - pip check
 
 about:
   home: https://routes.readthedocs.io/
@@ -43,7 +45,6 @@ about:
     mapping URL's to Controllers/Actions and generating URL's. Routes makes
     it easy to create pretty and concise URL's that are RESTful with little
     effort.
-  doc_source_url: https://github.com/bbangert/routes/blob/master/docs/index.rst
   dev_url: https://github.com/bbangert/routes
   doc_url: https://routes.readthedocs.io/
 
